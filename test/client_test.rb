@@ -16,17 +16,17 @@ class TestClient < Test::Unit::TestCase
   def test_post
     Net::HTTP.expects(:post_form).with() { |uri, params|
       uri.to_s == "http://example.com/socket" &&
-      params.keys.sort == [:presence_id, :timestamp, :token]
-    }.returns('{"socket_id": "12345"}')
+      params.keys.sort == [:key, :presence_id, :timestamp, :token]
+    }.returns(stub(:body => '{"socket": "12345"}'))
     res = client.post("/socket", :presence_id => "Mathias")
-    assert_equal "12345", res["socket_id"]
+    assert_equal "12345", res["socket"]
   end
 
   def test_credentials
     t    = Time.now
     hash = Digest::SHA1.hexdigest("key:secret:#{t.to_i}")
     Timecop.freeze(t) do
-      assert_equal({:timestamp => t.to_i.to_s, :token => hash}, client.credentials)
+      assert_equal({:key => "key", :timestamp => t.to_i.to_s, :token => hash}, client.credentials)
     end
   end
 end

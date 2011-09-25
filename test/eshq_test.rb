@@ -34,7 +34,7 @@ class TestESHQ < Test::Unit::TestCase
   end
 
   def test_open_socket
-    ESHQ.client.expects(:post).with("/socket", {:channel => "test"}).returns({"socket_id" => "12345"})
+    ESHQ.client.expects(:post).with("/socket", {:channel => "test"}).returns({"socket" => "12345"})
     assert_equal "12345", ESHQ.open_socket(:channel => "test")
   end
 

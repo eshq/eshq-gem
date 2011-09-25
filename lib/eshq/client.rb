@@ -15,12 +15,12 @@ module ESHQ
 
     def post(path, params)
       response = Net::HTTP.post_form(url_for(path), params.merge(credentials))
-      JSON.parse(response)
+      JSON.parse(response.body)
     end
 
     def credentials
       time = Time.now.to_i.to_s
-      {:timestamp => time, :token => token(time)}
+      {:key => key, :timestamp => time, :token => token(time)}
     end
 
     def token(time)

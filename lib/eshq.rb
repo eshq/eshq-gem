@@ -11,7 +11,7 @@ module ESHQ
   end
 
   def self.open_socket(options)
-    client.post("/socket", options)["socket_id"]
+    client.post("/socket", options)["socket"]
   end
 
   def self.send_event(options)
