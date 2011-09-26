@@ -10,11 +10,11 @@ module ESHQ
     @@client = nil
   end
 
-  def self.open_socket(options)
+  def self.open(options)
     client.post("/socket", options)["socket"]
   end
 
-  def self.send_event(options)
+  def self.send(options)
     client.post("/event", options)
   end
 
