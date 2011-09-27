@@ -15,7 +15,11 @@ module ESHQ
 
     def post(path, params)
       response = Net::HTTP.post_form(url_for(path), params.merge(credentials))
-      JSON.parse(response.body)
+      if response.content_type == "application/json"
+        JSON.parse(response.body)
+      else
+        true
+      end
     end
 
     def credentials
