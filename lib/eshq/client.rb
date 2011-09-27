@@ -15,10 +15,10 @@ module ESHQ
 
     def post(path, params)
       response = Net::HTTP.post_form(url_for(path), params.merge(credentials))
-      if response.content_type == "application/json"
-        JSON.parse(response.body)
+      if response.code == "200"
+       response.content_type == "application/json" ? JSON.parse(response.body) : true
       else
-        true
+        raise "Error #{response.body}"
       end
     end
 
