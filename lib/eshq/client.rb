@@ -8,13 +8,22 @@ module ESHQ
     attr_reader :url, :key, :secret
 
     def initialize(url, api_key, api_secret)
+      puts "NEW"
       @url        = url
       @key    = api_key
       @secret = api_secret
     end
 
     def post(path, params)
-      response = Net::HTTP.post_form(url_for(path), params.merge(credentials))
+      url = url_for(path)
+
+      request = Net::HTTP::Post.new(url.path)
+      request.set_form_data(params.merge(credentials))
+
+      http = Net::HTTP.new(url.host, url.port)
+      http.use_ssl = true if url.scheme == "https"
+
+      response = http.request(request)
       if response.code == "200"
        response.content_type == "application/json" ? JSON.parse(response.body) : true
       else

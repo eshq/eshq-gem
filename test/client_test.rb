@@ -2,7 +2,7 @@ require "test/unit"
 require "mocha"
 require "timecop"
 require "digest/sha1"
-require "net/http"
+require "fakeweb"
 
 require "eshq/client"
 
@@ -14,10 +14,11 @@ class TestClient < Test::Unit::TestCase
   end
 
   def test_post
-    Net::HTTP.expects(:post_form).with() { |uri, params|
-      uri.to_s == "http://example.com/socket" &&
-      params.keys.sort == [:key, :presence_id, :timestamp, :token]
-    }.returns(stub(:body => '{"socket": "12345"}'))
+    FakeWeb.register_uri(:post, "http://example.com/socket",
+      :body => '{"socket": "12345"}',
+      :content_type => "application/json"
+    )
+
     res = client.post("/socket", :presence_id => "Mathias")
     assert_equal "12345", res["socket"]
   end
