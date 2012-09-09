@@ -21,7 +21,8 @@ module ESHQ
       request.set_form_data(params.merge(credentials))
 
       http = Net::HTTP.new(url.host, url.port)
-      http.use_ssl = true if url.scheme == "https"
+      http.use_ssl = true if url.is_a?(URI::HTTPS)
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
       response = http.request(request)
       if response.code == "200"
