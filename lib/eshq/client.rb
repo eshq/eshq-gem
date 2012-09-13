@@ -8,7 +8,6 @@ module ESHQ
     attr_reader :url, :key, :secret
 
     def initialize(url, api_key, api_secret)
-      puts "NEW"
       @url        = url
       @key    = api_key
       @secret = api_secret
