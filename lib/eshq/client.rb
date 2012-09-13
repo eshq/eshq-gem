@@ -1,7 +1,7 @@
 require "digest/sha1"
 require "net/http"
 require "uri"
-require "json"
+require "multi_json"
 
 module ESHQ
   class Client
@@ -25,7 +25,7 @@ module ESHQ
 
       response = http.request(request)
       if response.code == "200"
-       response.content_type == "application/json" ? JSON.parse(response.body) : true
+       response.content_type == "application/json" ? MultiJson.load(response.body) : true
       else
         raise "Error #{response.body}"
       end
