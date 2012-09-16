@@ -4,13 +4,18 @@ require "timecop"
 require "digest/sha1"
 require "fakeweb"
 
-require "eshq/client"
+require "eshq"
 
 class TestClient < Test::Unit::TestCase
   attr_reader :client
 
   def setup
-    @client = ESHQ::Client.new("http://example.com", "key", "secret")
+    ESHQ.configure do |config|
+      config.url = 'http://example.com'
+      config.key = 'key'
+      config.secret = 'secret'
+    end
+    @client = ESHQ::Client.new
   end
 
   def test_post

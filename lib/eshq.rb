@@ -1,12 +1,18 @@
 require "eshq/version"
 require "eshq/client"
+require "eshq/configuration"
 
 module ESHQ
+  class << self
+    attr_accessor :configuration
+  end
+
   def self.client
-    @@client ||= Client.new(*settings)
+    @@client ||= Client.new
   end
 
   def self.reset_client
+    self.configuration = nil
     @@client = nil
   end
 
@@ -18,10 +24,8 @@ module ESHQ
     client.post("/event", options)
   end
 
-  private
-  def self.settings
-    ["ESHQ_URL", "ESHQ_KEY", "ESHQ_SECRET"].map { |v|
-      ENV[v] || raise("Missing environment variable #{v}")
-    }
+  def self.configure
+    self.configuration ||= Configuration.new
+    yield(configuration) if block_given?
   end
 end

@@ -13,24 +13,14 @@ class TestESHQ < Test::Unit::TestCase
 
   def test_client_instantiation
     client = ESHQ.client
-    assert_equal "http://example.com", client.url
-    assert_equal "key", client.key
-    assert_equal "secret", client.secret
+    assert_equal "http://example.com", client.config.url
+    assert_equal "key", client.config.key
+    assert_equal "secret", client.config.secret
   end
 
   def test_caches_client
     ESHQ::Client.expects(:new).once.returns(stub(:client))
     2.times { ESHQ.client }
-  end
-
-  def test_missing_settings
-    ENV["ESHQ_KEY"] = nil
-    begin
-      ESHQ.client
-      flunk "No exception raised"
-    rescue => e
-      assert_match /Missing environment variable/, e.to_s
-    end
   end
 
   def test_open

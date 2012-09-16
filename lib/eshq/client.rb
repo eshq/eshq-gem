@@ -5,12 +5,12 @@ require "multi_json"
 
 module ESHQ
   class Client
-    attr_reader :url, :key, :secret
+    def initialize
+      ESHQ.configure
+    end
 
-    def initialize(url, api_key, api_secret)
-      @url        = url
-      @key    = api_key
-      @secret = api_secret
+    def config
+      ESHQ.configuration
     end
 
     def post(path, params)
@@ -33,15 +33,15 @@ module ESHQ
 
     def credentials
       time = Time.now.to_i.to_s
-      {:key => key, :timestamp => time, :token => token(time)}
+      {:key => config.key, :timestamp => time, :token => token(time)}
     end
 
     def token(time)
-      Digest::SHA1.hexdigest([key, secret, time].join(":"))
+      Digest::SHA1.hexdigest([config.key, config.secret, time].join(":"))
     end
 
     def url_for(path)
-      URI.parse(url).tap do |url|
+      URI.parse(config.url).tap do |url|
         url.path = path
       end
     end
