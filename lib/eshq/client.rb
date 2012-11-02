@@ -13,6 +13,10 @@ module ESHQ
       ESHQ.configuration
     end
 
+    def url
+      config.url
+    end
+
     def post(path, params)
       url = url_for(path)
 
@@ -41,7 +45,7 @@ module ESHQ
     end
 
     def url_for(path)
-      URI.parse(config.url).tap do |url|
+      URI.parse(url).tap do |url|
         url.path = path
       end
     end
